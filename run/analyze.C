@@ -11,6 +11,7 @@ int analyze(int rn, int nseg)
   long long unsigned int sumgoodscaled[64] = {0};
   long long unsigned int totscaled[64] = {0};
 
+  int nevt = 0;
   TH1D* zhist;
   bool gothist = false;
   for(int i=1; i<nseg+1; ++i)
@@ -22,17 +23,19 @@ int analyze(int rn, int nseg)
       long long unsigned int seglolive[64] = {0};
       long long unsigned int seghilive[64] = {0};
       int badflag = 0;
-      int nevt = 0;
       
+      int segevt = 0;
       tree->SetBranchAddress("badFlag",&badflag);
       tree->SetBranchAddress("startScal",segloscaled);
       tree->SetBranchAddress("endScal",seghiscaled);
       tree->SetBranchAddress("startLive",seglolive);
       tree->SetBranchAddress("endLive",seghilive);
-      tree->SetBranchAddress("nevt",&nevt);
+      tree->SetBranchAddress("nevt",&segevt);
       
       tree->GetEntry(0);
-
+      //cout << badflag << endl;
+      nevt += segevt;
+      
       if(i==1)
 	{
 	  for(int j=0; j<64; ++j)
@@ -53,6 +56,7 @@ int analyze(int rn, int nseg)
       if(!gothist && !badflag)
 	{
 	  zhist = (TH1D*)file->Get("mbzhist");
+	  gothist = true;
 	}
       else if(!badflag)
 	{
@@ -84,6 +88,7 @@ int analyze(int rn, int nseg)
   outt->Branch("totscaled",totscaled,"totscaled[64]/l");
   outt->Branch("sumgoodscaled",sumgoodscaled,"sumgoodscaled[64]/l");
   outt->Branch("sumgoodlive",sumgoodlive,"sumgoodlive[64]/l");
+  outt->Branch("nevt",&nevt,"nevt/I");
   outt->Fill();
   outt->Write();
   zhist->Write();

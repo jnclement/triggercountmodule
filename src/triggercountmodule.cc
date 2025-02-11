@@ -41,7 +41,7 @@ int triggercountmodule::Init(PHCompositeNode *topNode)
   _tree->Branch("endLive",_endLive,"endLive[64]/l");
   _tree->Branch("startScal",_startScal,"startScal[64]/l");
   _tree->Branch("endScal",_endScal,"endScal[64]/l");
-  _tree->Branch("nevt",_evtn,"nevt/I");
+  _tree->Branch("nevt",&_evtn,"nevt/I");
   _mbzhist = new TH1D("mbzhist","",300,-150,150);
   return Fun4AllReturnCodes::EVENT_OK;
 }
@@ -76,6 +76,7 @@ int triggercountmodule::process_event(PHCompositeNode *topNode)
 	  _startScal[i] = gl1->lValue(i,2);
 	}
     }
+  //cout << _evtn << endl;
   ++_evtn;
   for(int i=0; i<64; ++i)
     {
@@ -169,8 +170,8 @@ int triggercountmodule::End(PHCompositeNode *topNode)
     {
       std::cout << "triggercountmodule::End(PHCompositeNode *topNode) This is the End..." << std::endl;
     }
-
-  if(_nseg != _lastseg && _evtn < 99800)
+  //cout << _evtn << endl;
+  if(_nseg != _lastseg && _evtn < 99000)
     {
       _badFlag = 1;
     }
