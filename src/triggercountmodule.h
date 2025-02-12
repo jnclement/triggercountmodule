@@ -43,11 +43,14 @@ class triggercountmodule : public SubsysReco
   int _rn;
   int _lastseg;
   int _nseg;
-  int _evtn = 0;
+  long long unsigned int _evtn = 0;
   long long unsigned int _startLive[64] = {0};
   long long unsigned int _startScal[64] = {0};
   long long unsigned int _endLive[64] = {0};
   long long unsigned int _endScal[64] = {0};
+  double _avgPS[64] = {0};
+  long long unsigned int _trigCounts[3][64] = {0};
+  double _eMBDlive[3] = {0};
   int _badFlag = 0;
   GlobalVertex::VTXTYPE _vtxtype = GlobalVertex::MBD;
 };

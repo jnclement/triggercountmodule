@@ -41,7 +41,11 @@ int triggercountmodule::Init(PHCompositeNode *topNode)
   _tree->Branch("endLive",_endLive,"endLive[64]/l");
   _tree->Branch("startScal",_startScal,"startScal[64]/l");
   _tree->Branch("endScal",_endScal,"endScal[64]/l");
-  _tree->Branch("nevt",&_evtn,"nevt/I");
+  _tree->Branch("nevt",&_evtn,"nevt/l");
+  _tree->Branch("avgPS",_avgPS,"avgPS[64]/D");
+  _tree->Branch("trigCounts",_trigCounts,"trigCounts[3][64]/l");
+  _tree->Branch("eMBDlive",_eMBDlive,"eMBDlive[3]/D");
+  
   _mbzhist = new TH1D("mbzhist","",300,-150,150);
   return Fun4AllReturnCodes::EVENT_OK;
 }
@@ -86,12 +90,8 @@ int triggercountmodule::process_event(PHCompositeNode *topNode)
 
   if(_debug > 1) cout << "Getting gl1 trigger vector from: " << gl1 << endl;
   long long unsigned int _trigvec = gl1->getScaledVector();
+
   int ismbtrig = (_trigvec >> 10) & 1;
-  if(!ismbtrig)
-    {
-      if(_debug > 2) cout << "non MB event, not counting" << endl;
-      return Fun4AllReturnCodes::ABORTEVENT;
-    }
 
   GlobalVertexMap* gvtxmap = findNode::getClass<GlobalVertexMapv1>(topNode, "GlobalVertexMap");
 
@@ -126,10 +126,31 @@ int triggercountmodule::process_event(PHCompositeNode *topNode)
           return Fun4AllReturnCodes::ABORTEVENT;
         }
     }
+  
+  int zthresh[3] = {30,60,200};
+
+
+
+  for(int i=0; i<3; ++i)
+    {
+      if(abs(zvtx) < zthresh[i] && !std::isnan(zvtx))
+	{
+	  for(int j=0; j<64; ++j)
+	    {
+	      if((_trigvec >> j) & 1) _trigCounts[i][j]++;
+	    }
+	}
+    }
+
+  if(!ismbtrig)
+    {
+      if(_debug > 2) cout << "non MB event, not counting" << endl;
+      return Fun4AllReturnCodes::ABORTEVENT;
+    }
+
   if(std::isnan(zvtx))
     {
-      if(_debug > 0) cout << "zvtx is NAN after attempting to grab it. ABORT EV\
-ENT!" << endl;
+      if(_debug > 0) cout << "zvtx is NAN after attempting to grab it. ABORT EVENT!" << endl;
       return Fun4AllReturnCodes::ABORTEVENT;
     }
   if(abs(zvtx) > 150)
@@ -176,6 +197,17 @@ int triggercountmodule::End(PHCompositeNode *topNode)
       _badFlag = 1;
     }
 
+  for(int i=0; i<64; ++i)
+    {
+      if(_endScal[i] == _startScal[i]) _avgPS[i] = 0;
+      else _avgPS[i] = ((float)(_endLive[i]-_startLive[i]))/(_endScal[i]-_startScal[i]);
+    }
+  for(int i=0; i<3; ++i)
+    {
+      _eMBDlive[i] = _avgPS[10]*_trigCounts[i][10];
+    }
+  
+  
   _outfile->cd();
   _mbzhist->Write();
   _tree->Fill();
