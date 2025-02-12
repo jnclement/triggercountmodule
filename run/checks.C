@@ -20,7 +20,7 @@ void get_scalers(int runnumber, long long unsigned int live[64], long long unsig
       if(!res) continue;
       row = res->Next();
       if(!row) continue;
-      cout << row->GetField(0) << "  " << row->GetField(1) << endl;
+      //cout << row->GetField(0) << "  " << row->GetField(1) << endl;
       live[i] = stoll(row->GetField(0));
       scaled[i] = stoll(row->GetField(1));
     }
