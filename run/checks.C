@@ -1,9 +1,44 @@
-int checks(string filename)
+void get_scalers(int runnumber, long long unsigned int live[64], long long unsigned int scaled[64])
 {
+  
+  
+  TSQLServer *db = TSQLServer::Connect("pgsql://sphnxdaqdbreplica:5432/daq","","");
+  if(!db)
+    {
+      cout << "FAILED TO CONNECT TO DB!" << endl;
+      exit(1);
+    }
+  TSQLRow *row;
+  TSQLResult *res;
+  char sql[1000];
 
+
+  for(int i=0; i<64; ++i)
+    {
+      sprintf(sql, "select live, scaled from gl1_scalers where runnumber = %d and index = %d;", runnumber, i);
+      res = db->Query(sql);
+      if(!res) continue;
+      row = res->Next();
+      if(!row) continue;
+      cout << row->GetField(0) << "  " << row->GetField(1) << endl;
+      live[i] = stoll(row->GetField(0));
+      scaled[i] = stoll(row->GetField(1));
+    }
+}
+
+int checks(int runnumber)
+{
+  stringstream filestringstream;
+  filestringstream << "output/added/triggeroutput_" << runnumber << ".root";
+  string filename = filestringstream.str();
   cout << endl << endl << endl << "BEGIN!" << endl;
   TFile* file = TFile::Open(filename.c_str());
   TTree* tree = (TTree*)file->Get("outt");
+
+  long long unsigned int dblive[64] = {0};
+  long long unsigned int dbscaled[64] = {0};
+
+  get_scalers(runnumber, dblive, dbscaled);
 
   long long unsigned int totlive[64];
   long long unsigned int totscaled[64];
@@ -30,9 +65,11 @@ int checks(string filename)
   cout << "upscaled mbd evt. w/ |zvtx| < 30/60/200: " << totembdlive[0] << " " << totembdlive[1] << " " << totembdlive[2] << endl;
   for(int i=0; i<64; ++i)
     {
-      cout << "trigger " << i << endl;
+      cout << endl << "trigger " << i << endl << endl;
+      cout << "DB live counts: " << dblive[i] << endl;
       cout << "live counts (last - first): " << totlive[i] << endl;
       cout << "live counts (good segs): " << sumgoodlive[i] << endl;
+      cout << "DB scaled counts: " << dbscaled[i] << endl;
       cout << "scaled counts (last - first): " << totscaled[i] << endl;
       cout << "scaled counts (good segs): " << sumgoodscaled[i] << endl;
       cout << "average prescale (good segs): " << avgPS[i] << endl;

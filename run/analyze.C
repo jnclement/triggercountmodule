@@ -95,7 +95,7 @@ int analyze(int rn, int nseg)
   int totalgood = zhist->Integral();
   for(int i=0; i<64; ++i)
     {
-      avgPS[i] = ((double)sumgoodlive[i])/sumgoodscaled[i];
+      avgPS[i] = sumgoodscaled[i]==0?0:((double)sumgoodlive[i])/sumgoodscaled[i];
       totlive[i] = lastlivescaler[i] - firstlivescaler[i];
       totscaled[i] = lastscaledscaler[i] - firstscaledscaler[i];
     }
