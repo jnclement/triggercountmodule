@@ -7,9 +7,9 @@ PREFIX="./subs"
 SUBNAME="${BASENAME}.sub"
 
 echo "executable = addcommand.sh" > $PREFIX/$SUBNAME
-echo "concurrency_limits=CONCURRENCY_LIMIT_DEFAULT:250" >> $PREFIX/$SUBNAME
+echo "concurrency_limits=CONCURRENCY_LIMIT_DEFAULT:500" >> $PREFIX/$SUBNAME
 echo "arguments = ${RN}" >> $PREFIX/$SUBNAME
-echo "priority = 100000000" >> $PREFIX/$SUBNAME
+echo "priority = 0" >> $PREFIX/$SUBNAME
 echo "output = output/out/output_${BASENAME}_\$(Process).out" >> $PREFIX/$SUBNAME
 echo "should_transfer_files   = IF_NEEDED" >> $PREFIX/$SUBNAME
 echo "when_to_transfer_output = ON_EXIT" >> $PREFIX/$SUBNAME
