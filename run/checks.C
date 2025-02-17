@@ -64,7 +64,7 @@ int checks(int runnumber)
   cout << "total produced events in run: " << nevt << endl;
   cout << "upscaled mbd evt. w/ |zvtx| < 30/60/200: " << totembdlive[0] << " " << totembdlive[1] << " " << totembdlive[2] << endl;
   for(int i=0; i<64; ++i)
-    {
+    {      
       cout << endl << "trigger " << i << endl << endl;
       cout << "DB live counts: " << dblive[i] << endl;
       cout << "live counts (last - first): " << totlive[i] << endl;

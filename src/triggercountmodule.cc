@@ -77,6 +77,7 @@ int triggercountmodule::process_event(PHCompositeNode *topNode)
       for(int i=0; i<64; ++i)
 	{
 	  _startLive[i] = gl1->lValue(i,1);
+	  if(_debug > 2) cout << gl1->lValue(i,1) << endl;
 	  _startScal[i] = gl1->lValue(i,2);
 	}
     }
@@ -85,6 +86,7 @@ int triggercountmodule::process_event(PHCompositeNode *topNode)
   for(int i=0; i<64; ++i)
     {
       _endLive[i] = gl1->lValue(i,1);
+      if(_debug > 2) cout << "end" << gl1->lValue(i,1) << endl;
       _endScal[i] = gl1->lValue(i,2);
     }
 
@@ -201,12 +203,12 @@ int triggercountmodule::End(PHCompositeNode *topNode)
     {
       if(_endScal[i] == _startScal[i]) _avgPS[i] = 0;
       else _avgPS[i] = ((float)(_endLive[i]-_startLive[i]))/(_endScal[i]-_startScal[i]);
+      if(_debug > 2) cout << "realend" << _endLive[i] << endl;
     }
   for(int i=0; i<3; ++i)
     {
       _eMBDlive[i] = _avgPS[10]*_trigCounts[i][10];
     }
-  
   
   _outfile->cd();
   _mbzhist->Write();

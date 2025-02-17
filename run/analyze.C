@@ -53,9 +53,9 @@ int analyze(int rn, int nseg)
 	      firstscaledscaler[j] = segloscaled[j];
 	    }
 	}
-      if(i==nseg)
+      for(int j=0; j<64; ++j)
 	{
-	  for(int j=0; j<64; ++j)
+	  if(seghilive[j] != 0)
 	    {
 	      lastlivescaler[j] = seghilive[j];
 	      lastscaledscaler[j] = seghiscaled[j];

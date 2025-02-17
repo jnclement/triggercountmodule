@@ -39,6 +39,6 @@ int get_luminosity(string rnlist, int trigger, int zsel)
       //cout << lumi << " " << tottrigcounts[zsel][10] << " " << avgPS[10] << " " << avgPS[trigger] << endl;
     }
   lumi /= (23e9);
-  cout << lumi << " pb^-1" << endl;
+  cout << "Trigger " << trigger << ": " << lumi << " pb^-1" << endl;
   return 0;
 }
