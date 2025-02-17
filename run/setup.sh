@@ -8,11 +8,12 @@ fi
 BUILDDIR=$1
 INSTALLDIR=$2
 
-echo "#!/bin/bash" > earlydata.sh
+echo '#!/bin/bash' > earlydata.sh
+
 echo "source /opt/sphenix/core/bin/setup_local.sh ${INSTALLDIR}" >> earlydata.sh
 cat earlydata.config >> earlydata.sh
 
-echo "#!/bin/bash" > addcomand.sh
+echo '#!/bin/bash' > addcommand.sh
 echo "source /opt/sphenix/core/bin/setup_local.sh ${INSTALLDIR}" >> addcommand.sh
 cat addcommand.config >> addcommand.sh
 
@@ -35,7 +36,4 @@ mkdir -p subs
 mkdir -p lists
 mkdir -p /sphenix/tg/tg01/jets/$USER/trigcount
 
-echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-echo "EDIT earlydata.sh AND addcommand.sh BY REPLACING THE DIRECTORY"
-echo "/sphenix/user/jocl/projects/testinstall TO YOUR INSTALL DIRECTORY"
-echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "Done setting up!"
