@@ -8,6 +8,14 @@ fi
 BUILDDIR=$1
 INSTALLDIR=$2
 
+echo "#!/bin/bash" > earlydata.sh
+echo "source /opt/sphenix/core/bin/setup_local.sh ${INSTALLDIR}" >> earlydata.sh
+cat earlydata.config >> earlydata.sh
+
+echo "#!/bin/bash" > addcomand.sh
+echo "source /opt/sphenix/core/bin/setup_local.sh ${INSTALLDIR}" >> addcommand.sh
+cat addcommand.config >> addcommand.sh
+
 cd ..
 THISREPODIR=`pwd`
 
